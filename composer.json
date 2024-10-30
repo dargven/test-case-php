@@ -1,0 +1,13 @@
+{
+  "autoload": {
+    "psr-4": {
+      "Answer\\": "application/modules/",
+      "DB\\":"application/modules/DB",
+      "Application\\": "application/modules",
+      "Order\\": "application/modules/Order"
+    }
+  },
+  "require": {
+    "zircote/swagger-php": "^4.11"
+  }
+}
