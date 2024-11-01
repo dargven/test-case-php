@@ -1,7 +1,7 @@
-<?php namespace Application;
+<?php namespace application\modules;
 
-use DB\DB;
-use Order\Order;
+use application\modules\DB\DB;
+use application\modules\Order\Order;
 
 
 class Application

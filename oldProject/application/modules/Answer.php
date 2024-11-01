@@ -1,4 +1,4 @@
-<?php namespace Answer;
+<?php namespace application\modules;
 
 class Answer
 {

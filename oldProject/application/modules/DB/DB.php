@@ -1,5 +1,6 @@
-<?php namespace DB;
+<?php namespace application\modules\DB;
 use PDO;
+
 class DB
 {
     private ?\PDO $pdo;
