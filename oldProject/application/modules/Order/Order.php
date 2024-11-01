@@ -1,4 +1,4 @@
-<?php namespace Order;
+<?php namespace application\modules\Order;
 
 
 class Order
@@ -27,7 +27,7 @@ class Order
         #Возвращаемые данные в рандомном порядке
         $answers = [
             ['message' => 'order successfully booked'],
-            ['error' => 1002]
+            ['error' => 'barcode already exists']
         ];
         return $answers[random_int(0, 1)];
     }
@@ -44,32 +44,7 @@ class Order
         return $answers[random_int(0, 4)];
     }
 
-    private function checkBarCode()
-    {
 
-        $lockFile = fopen('/tmp/barcode_lock', 'c+');
-        if (flock($lockFile, LOCK_EX)) { // Установка блокировки
-            do {
-                $barcode = $this->generateBarCode();
-                $response = $this->apiBook();
-                var_dump($barcode);
-                var_dump($response);
-                //Аргументы не передаю специально за ненадобностью.
-                if (isset($response['message']) && $response['message'] === 'Order successfully booked') {
-                    flock($lockFile, LOCK_UN); // Снятие блокировки после успешной записи
-                    fclose($lockFile);
-                    return $barcode;
-                }
-            } while (isset($response['error']) && $response['error'] === 'barcode already exists');
-
-            // Снятие блокировки
-            flock($lockFile, LOCK_UN);
-            fclose($lockFile);
-        }
-
-
-        return false;
-    }
 
     private function calculateEquals($ticket_adult_price, $ticket_adult_quantity, $ticket_kid_price, $ticket_kid_quantity,
                                      $params)
@@ -96,19 +71,19 @@ class Order
                              $ticket_kid_price, $ticket_kid_quantity)
     {
         $barcode = $this->checkBarCode();
-        var_dump($barcode);
+//        var_dump($barcode);
         if ($barcode) {
             $user_id = random_int(2, 15);
             $equalPrice = $this->calculateEquals($ticket_adult_price, $ticket_adult_quantity,
                 $ticket_kid_price, $ticket_kid_quantity, 'equal');
             $response = $this->apiApprove($barcode);
+//            var_dump($response);
             if (isset($response['message']) && $response['message'] === 'order successfully approved') {
                 $this->db->addOrder($event_id, $event_date, $ticket_adult_price,
                     $ticket_adult_quantity, $ticket_kid_price, $ticket_kid_quantity, $barcode, $equalPrice, $user_id);
                 return true;
             
             }
-//            var_dump('123', $response);
             return $response;
         }
         return ['error' => 1001];

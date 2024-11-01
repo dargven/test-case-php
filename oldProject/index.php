@@ -1,7 +1,7 @@
 <?php
 
-use Answer\Answer;
-use Application\Application;
+use application\modules\Answer;
+use application\modules\Application;
 
 header('Content-Type: Application/json; charset = utf-8');
 header('Access-Control-Allow-Origin: *');
